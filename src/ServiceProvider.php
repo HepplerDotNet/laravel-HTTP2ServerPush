@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-namespace JacobBennett\Http2ServerPush;
+namespace HepplerDotNet\Http2ServerPush;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 

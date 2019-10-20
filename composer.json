@@ -1,12 +1,12 @@
 {
-    "name": "jacobbennett/laravel-http2serverpush",
+    "name": "hepplerdotnet/laravel-http2serverpush",
     "description": "A HTTP2 Server Push Middleware for Laravel 5",
     "keywords": [
         "laravel",
         "laravel-http2serverpush",
         "serverpush"
     ],
-    "homepage": "https://github.com/jacobbennett/laravel-http2serverpush",
+    "homepage": "https://github.com/HepplerDotNet/laravel-http2serverpush",
     "license": "MIT",
     "authors": [
         {
@@ -14,12 +14,18 @@
             "email": "me@jakebennett.net",
             "homepage": "https://jakebennett.net",
             "role": "Developer"
+        },
+        {
+            "name": "Patrick Heppler",
+            "email": "patrick@heppler.net",
+            "homepage": "https://www.heppler.net",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php" : "^5.5|^7.0",
-        "illuminate/support": "^5.3",
-        "illuminate/http": "^5.3",
+        "php" : "7.*",
+        "illuminate/support": "6.*",
+        "illuminate/http": "6.*",
         "symfony/dom-crawler": "^2.7|^3.0|^4.0",
         "symfony/css-selector": "^2.7|^3.0|^4.0"
     },
@@ -29,12 +35,12 @@
     },
     "autoload": {
         "psr-4": {
-            "JacobBennett\\Http2ServerPush\\": "src"
+            "HepplerDotNet\\Http2ServerPush\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JacobBennett\\Http2ServerPush\\Test\\": "tests"
+            "HepplerDotNet\\Http2ServerPush\\Test\\": "tests"
         }
     },
     "scripts": {
