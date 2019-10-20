@@ -15,7 +15,7 @@ Simply route your requests through the `AddHttp2ServerPush` middleware and it wi
 
 You can install the package via composer:
 ``` bash
-$ composer require jacobbennett/laravel-http2serverpush
+$ composer require hepplerdotnet/laravel-http2serverpush
 ```
 
 Next you must add the `\JacobBennett\Http2ServerPush\Middleware\AddHttp2ServerPush`-middleware to the kernel. Adding it to the web group is recommeneded as API's do not have assets to push.
@@ -26,7 +26,7 @@ Next you must add the `\JacobBennett\Http2ServerPush\Middleware\AddHttp2ServerPu
 protected $middlewareGroups = [
     'web' => [
         ...
-        \JacobBennett\Http2ServerPush\Middleware\AddHttp2ServerPush::class,
+        \HepplerDotNet\Http2ServerPush\Middleware\AddHttp2ServerPush::class,
         ...
     ],
     ...
@@ -36,7 +36,7 @@ protected $middlewareGroups = [
 ## Publish config
 
 ```php
-php artisan vendor:publish --provider="JacobBennett\Http2ServerPush\ServiceProvider"
+php artisan vendor:publish --provider="HepplerDotNet\Http2ServerPush\ServiceProvider"
 ```
 
 
