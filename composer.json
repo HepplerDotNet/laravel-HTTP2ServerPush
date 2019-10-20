@@ -45,5 +45,12 @@
     },
     "scripts": {
         "test": "phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "HepplerDotNet\\Http2ServerPush\\ServiceProvider"
+            ]
+        }
     }
 }
