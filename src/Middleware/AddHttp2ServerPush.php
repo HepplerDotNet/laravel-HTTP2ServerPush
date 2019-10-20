@@ -29,7 +29,7 @@ class AddHttp2ServerPush
     {
         $response = $next($request);
 
-        if ($response->isRedirection() || !$response instanceof Response || ($request->isJson() && !config('http2serverpush.allow_json'))) {
+        if ($response->isRedirection() || !$response instanceof Response || $request->isJson() || ($request->wantsJson() && !config('http2serverpush.allow_json'))) {
             return $response;
         }
 
