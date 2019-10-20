@@ -5,6 +5,7 @@ namespace HepplerDotNet\Http2ServerPush\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\DomCrawler\Crawler;
 
 class AddHttp2ServerPush
@@ -136,7 +137,7 @@ class AddHttp2ServerPush
         ];
 
         $type = collect($linkTypeMap)->first(function ($type, $extension) use ($url) {
-            return str_contains(strtoupper($url), $extension);
+            return Str::contains(strtoupper($url), $extension);
         });
 
 
