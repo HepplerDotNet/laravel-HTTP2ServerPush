@@ -21,11 +21,11 @@ class AddHttp2ServerPush
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
+     * @param \Closure                 $next
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $limit = null, $sizeLimit = null, $excludeKeywords=null)
+    public function handle(Request $request, Closure $next, $limit = null, $sizeLimit = null, $excludeKeywords = null)
     {
         $response = $next($request);
 
@@ -38,10 +38,12 @@ class AddHttp2ServerPush
         return $response;
     }
 
-    public function getConfig($key, $default=false) {
-        if(!function_exists('config')) { // for tests..
+    public function getConfig($key, $default = false)
+    {
+        if (!function_exists('config')) { // for tests..
             return $default;
         }
+
         return config('http2serverpush.'.$key, $default);
     }
 
@@ -50,7 +52,7 @@ class AddHttp2ServerPush
      *
      * @return $this
      */
-    protected function generateAndAttachLinkHeaders(Response $response, $limit = null, $sizeLimit = null, $excludeKeywords=null)
+    protected function generateAndAttachLinkHeaders(Response $response, $limit = null, $sizeLimit = null, $excludeKeywords = null)
     {
         $excludeKeywords ?? $this->getConfig('exclude_keywords', []);
         $headers = $this->fetchLinkableNodes($response)
@@ -59,21 +61,24 @@ class AddHttp2ServerPush
                 return $this->buildLinkHeaderString($url);
             })
             ->unique()
-            ->filter(function($value, $key) use ($excludeKeywords){
-                if(!$value) return false;
+            ->filter(function ($value, $key) use ($excludeKeywords) {
+                if (!$value) {
+                    return false;
+                }
                 $exclude_keywords = collect($excludeKeywords)->map(function ($keyword) {
                     return preg_quote($keyword);
                 });
-                if($exclude_keywords->count() <= 0) {
+                if ($exclude_keywords->count() <= 0) {
                     return true;
                 }
+
                 return !preg_match('%('.$exclude_keywords->implode('|').')%i', $value);
             })
             ->take($limit);
 
-        $sizeLimit = $sizeLimit ?? max(1, intval($this->getConfig('size_limit', 32*1024)));
+        $sizeLimit = $sizeLimit ?? max(1, (int) ($this->getConfig('size_limit', 32 * 1024)));
         $headersText = trim($headers->implode(','));
-        while(strlen($headersText) > $sizeLimit) {
+        while (strlen($headersText) > $sizeLimit) {
             $headers->pop();
             $headersText = trim($headers->implode(','));
         }
@@ -125,41 +130,50 @@ class AddHttp2ServerPush
     private function buildLinkHeaderString($url)
     {
         $linkTypeMap = [
-            '.CSS'  => 'style',
-            '.JS'   => 'script',
-            '.BMP'  => 'image',
-            '.GIF'  => 'image',
-            '.JPG'  => 'image',
+            '.CSS' => 'style',
+            '.JS' => 'script',
+            '.BMP' => 'image',
+            '.GIF' => 'image',
+            '.JPG' => 'image',
             '.JPEG' => 'image',
-            '.PNG'  => 'image',
-            '.SVG'  => 'image',
+            '.PNG' => 'image',
+            '.WEBP' => 'image',
+            '.SVG' => 'image',
             '.TIFF' => 'image',
+            '.WOFF' => 'font',
+            '.WOFF2' => 'font',
+            '.OTF' => 'font',
+            '.TTF' => 'font',
         ];
 
         $type = collect($linkTypeMap)->first(function ($type, $extension) use ($url) {
             return Str::contains(strtoupper($url), $extension);
         });
 
-
-        if(!preg_match('%^https?://%i', $url)) {
+        if (!preg_match('%^https?://%i', $url)) {
             $basePath = $this->getConfig('base_path', '/');
-            $url = $basePath . ltrim($url, $basePath);
+            $url = $basePath.ltrim($url, $basePath);
         }
 
-        return is_null($type) ? null : "<{$url}>; rel=preload; as={$type}";
+        /* Add crossorigin based on $type */
+        if (in_array($type, ['font', 'script'])) {
+            return is_null($type) ? null : "<{$url}>; rel=preload; as={$type};crossorigin;";
+        }
+        if (in_array($type, ['image', 'style'])) {
+            return is_null($type) ? null : "<{$url}>; rel=preload; as={$type};";
+        }
     }
 
     /**
-     * Add Link Header
+     * Add Link Header.
      *
      * @param \Illuminate\Http\Response $response
-     *
      * @param $link
      */
-    private function addLinkHeader(Response $response, $link)
+    private function addLinkHeader(Response $response, $link): void
     {
         if ($response->headers->get('Link')) {
-            $link = $response->headers->get('Link') . ',' . $link;
+            $link = $response->headers->get('Link').','.$link;
         }
 
         $response->header('Link', $link);
