@@ -157,9 +157,21 @@ class AddHttp2ServerPush
 
         /* Add crossorigin based on $type */
         if (in_array($type, ['font', 'script'])) {
+            /* Store URL in session, so Resource gets only pushed once */
+            if (session()->has($url)) {
+                return;
+            }
+            session()->put($url, true);
+
             return is_null($type) ? null : "<{$url}>; rel=preload; as={$type};crossorigin;";
         }
         if (in_array($type, ['image', 'style'])) {
+            /* Store URL in session, so Resource gets only pushed once */
+            if (session()->has($url)) {
+                return;
+            }
+            session()->put($url, true);
+
             return is_null($type) ? null : "<{$url}>; rel=preload; as={$type};";
         }
     }
