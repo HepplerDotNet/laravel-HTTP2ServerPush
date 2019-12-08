@@ -3,6 +3,7 @@
 namespace HepplerDotNet\Http2ServerPush\Middleware;
 
 use Closure;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -54,7 +55,7 @@ class AddHttp2ServerPush
      */
     protected function generateAndAttachLinkHeaders(Response $response, $limit = null, $sizeLimit = null, $excludeKeywords = null)
     {
-        $excludeKeywords ?? $this->getConfig('exclude_keywords', []);
+        $excludeKeywords = $excludeKeywords ?? $this->getConfig('exclude_keywords', []);
         $headers = $this->fetchLinkableNodes($response)
             ->flatten(1)
             ->map(function ($url) {
@@ -77,6 +78,9 @@ class AddHttp2ServerPush
             ->take($limit);
 
         $sizeLimit = $sizeLimit ?? max(1, (int) ($this->getConfig('size_limit', 32 * 1024)));
+
+        $sizeLimit = $sizeLimit ?? max(1, (int) ($this->getConfig('size_limit', 32 * 1024)));
+
         $headersText = trim($headers->implode(','));
         while (strlen($headersText) > $sizeLimit) {
             $headers->pop();
@@ -150,7 +154,7 @@ class AddHttp2ServerPush
             return Str::contains(strtoupper($url), $extension);
         });
 
-        if (!preg_match('%^https?://%i', $url)) {
+        if (!preg_match('%^(https?:)?//%i', $url)) {
             $basePath = $this->getConfig('base_path', '/');
             $url = $basePath.ltrim($url, $basePath);
         }

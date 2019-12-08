@@ -11,6 +11,11 @@ Server Push is a HTTP/2 concept which allows the server to speculatively start s
 This package aims to provide the _easiest_ experience for adding Server Push to your responses. 
 Simply route your requests through the `AddHttp2ServerPush` middleware and it will automatically create and attach the `Link` headers necessary to implement Server Push for your CSS, JS and Image assets.
 
+## Requirements
+
+- Laravel 5
+- PHP 7
+
 ## Installation
 
 You can install the package via composer:
@@ -45,7 +50,7 @@ php artisan vendor:publish --provider="HepplerDotNet\Http2ServerPush\ServiceProv
 When you route a request through the `AddHttp2ServerPush` middleware, the response is scanned for any `link`, `script` or `img` tags that could benefit from being loaded using Server Push. 
 These assets will be added to the `Link` header before sending the response to the client. Easy!
 
-**Note:** To push an image asset, it must have one of the following extensions: `bmp`, `gif`, `jpg`, `jpeg`, `png` or `tiff`.
+**Note:** To push an image asset, it must have one of the following extensions: `bmp`, `gif`, `jpg`, `jpeg`, `png`, `tiff` or `svg`.
 
 ## Testing
 
