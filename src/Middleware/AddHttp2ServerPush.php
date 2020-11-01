@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Symfony\Component\DomCrawler\Crawler;
 
 class AddHttp2ServerPush
